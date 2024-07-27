@@ -6,18 +6,26 @@ from pathlib import Path
 
 class TestGenerateRSAKey(unittest.TestCase):
 
-    @patch("encryption_helper.main.RSA.generate")
+    @patch("encryption_helper.main.serialization.load_pem_private_key")
     @patch("encryption_helper.main.Path.mkdir")
     @patch("encryption_helper.main.open", new_callable=mock_open)
     @patch("encryption_helper.main.Context.get_instance")
+    @patch("encryption_helper.main.rsa.generate_private_key")
     def test_generate_rsa_key(
-        self, mock_context, mock_open, mock_mkdir, mock_rsa_generate
+        self,
+        mock_generate_private_key,
+        mock_context,
+        mock_open,
+        mock_mkdir,
+        mock_load_pem_private_key,
     ):
         # Mock RSA key pair generation
-        mock_key_pair = MagicMock()
-        mock_key_pair.export_key.return_value = b"fake_private_key"
-        mock_key_pair.publickey().export_key.return_value = b"fake_public_key"
-        mock_rsa_generate.return_value = mock_key_pair
+        mock_private_key = MagicMock()
+        mock_public_key = MagicMock()
+        mock_private_key.private_bytes.return_value = b"fake_private_key"
+        mock_public_key.public_bytes.return_value = b"fake_public_key"
+        mock_private_key.public_key.return_value = mock_public_key
+        mock_generate_private_key.return_value = mock_private_key
 
         # Mock logger
         mock_logger = MagicMock()
@@ -52,10 +60,11 @@ class TestGenerateRSAKey(unittest.TestCase):
             mock_print.assert_any_call(private_key.decode())
 
     @patch(
-        "encryption_helper.main.RSA.generate", side_effect=OSError("File write error")
+        "encryption_helper.main.rsa.generate_private_key",
+        side_effect=OSError("File write error"),
     )
     @patch("encryption_helper.main.Context.get_instance")
-    def test_generate_rsa_key_os_error(self, mock_context, mock_rsa_generate):
+    def test_generate_rsa_key_os_error(self, mock_context, mock_generate_private_key):
         # Mock logger
         mock_logger = MagicMock()
         mock_context.return_value.get_logger.return_value = mock_logger
@@ -70,10 +79,13 @@ class TestGenerateRSAKey(unittest.TestCase):
         )
 
     @patch(
-        "encryption_helper.main.RSA.generate", side_effect=Exception("Unexpected error")
+        "encryption_helper.main.rsa.generate_private_key",
+        side_effect=Exception("Unexpected error"),
     )
     @patch("encryption_helper.main.Context.get_instance")
-    def test_generate_rsa_key_unexpected_error(self, mock_context, mock_rsa_generate):
+    def test_generate_rsa_key_unexpected_error(
+        self, mock_context, mock_generate_private_key
+    ):
         # Mock logger
         mock_logger = MagicMock()
         mock_context.return_value.get_logger.return_value = mock_logger
