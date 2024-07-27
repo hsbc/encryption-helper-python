@@ -1,8 +1,11 @@
 """
-context.py
+Context module for the encryption_helper package.
 
 This module provides a Context class for managing application-wide settings and logging.
 It implements the Singleton pattern to ensure only one instance of the context exists.
+
+Classes:
+    Context: A singleton class for managing application context and logging.
 """
 
 import logging

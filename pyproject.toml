@@ -25,6 +25,7 @@ pycryptodome = "^3.20.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
+pytest-mock = "^3.14.0"
 
 [tool.poetry.scripts]
 encryption-helper = "encryption_helper.__main__:main"
