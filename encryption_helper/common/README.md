@@ -1,12 +1,15 @@
+<!-- markdownlint-disable MD033 MD041 -->
 <p align="center">
   <img src="https://www.hsbc.com/-/files/hsbc/header/hsbc-logo-200x25.svg" alt="HSBC Logo" width="200" title="HSBC Logo">
 </p>
 
-<h1 align="center">Encryption Helper Python - Strings Module</h1>
+<h1 align="center">Encryption Helper Python</h1>
 
 <p align="center">
   <img src="../../assets/banner.jpg" alt="Encryption Helper Banner">
 </p>
+
+<h2 align="center">Strings Module</h2>
 
 <p align="center">
   <strong>Strings module for the encryption_helper package.</strong>
@@ -17,6 +20,7 @@
   <a href="#usage">Usage</a> •
   <a href="#license">License</a>
 </p>
+<!-- markdownlint-enable MD033 MD041 -->
 
 ## Attributes
 
@@ -42,4 +46,4 @@ print(encrypted_file_suffix)  # Output: .bin
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](../../LICENSE) file for details.
