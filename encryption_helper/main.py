@@ -7,7 +7,9 @@ It handles the generation process, file I/O operations, and logging.
 
 from pathlib import Path
 from typing import Tuple
-from Crypto.PublicKey import RSA
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
 from .context import Context
 
 
@@ -41,18 +43,22 @@ def generate_rsa_key() -> Tuple[bytes, bytes]:
 
     try:
         # Generate the RSA key pair
-        key_pair = RSA.generate(2048)
+        key_pair = rsa.generate_private_key(
+            public_exponent=65537, key_size=2048, backend=default_backend()
+        )
 
         # Export the private key
-        private_key = key_pair.export_key(
-            format="PEM",
-            # passphrase="1password",  # Uncomment if you want to use a passphrase
-            # pkcs=1,
-            # protection="scryptAndAES256-CBC",
+        private_key = key_pair.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption(),  # Use a passphrase if needed
         )
 
         # Export the public key
-        public_key = key_pair.publickey().export_key(format="PEM")
+        public_key = key_pair.public_key().public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
 
         # Create the directory for storing keys
         keys_dir = Path("keys/pem")

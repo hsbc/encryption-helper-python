@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 MD041 -->
 <p align="center">
   <img src="https://www.hsbc.com/-/files/hsbc/header/hsbc-logo-200x25.svg" alt="HSBC Logo" width="200" title="HSBC Logo">
 </p>
@@ -9,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>A Python CLI application for generating RSA public and private key pairs using PyCryptodome</strong>
+  <strong>A Python CLI application for generating RSA public and private key pairs using the cryptography library</strong>
 </p>
 
 <p align="center">
@@ -20,10 +21,11 @@
   <a href="#development">Development</a> •
   <a href="#license">License</a>
 </p>
+<!-- markdownlint-enable MD033 MD041 -->
 
 ## Features
 
-Encryption Helper is a robust Python package designed to simplify the process of creating RSA key pairs. It leverages the PyCryptodome library to offer:
+Encryption Helper is a robust Python package designed to simplify the process of creating RSA key pairs. It leverages the [cryptography][0] library to offer:
 
 - Generation of 2048-bit RSA key pairs
 - Automatic saving of keys in PEM format
@@ -32,7 +34,7 @@ Encryption Helper is a robust Python package designed to simplify the process of
 
 ## Installation
 
-This package requires Python 3.8 or later and uses PyCryptodome for cryptographic operations.
+This package requires Python 3.8 or later and uses cryptography for cryptographic operations.
 
 ### Using Poetry (recommended)
 
@@ -43,7 +45,7 @@ Ensure you have Poetry installed, then follow these steps:
 git clone https://github.com/hsbc/encryption-helper-python.git
 cd encryption-helper-python
 
-# Install dependencies (including PyCryptodome)
+# Install dependencies (including cryptography)
 poetry install
 ```
 
@@ -60,7 +62,7 @@ cd encryption-helper-python
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-# Install the package and its dependencies (including PyCryptodome)
+# Install the package and its dependencies (including cryptography)
 pip install .
 ```
 
@@ -91,7 +93,7 @@ python -m encryption_helper
 
 These commands will:
 
-- Use PyCryptodome to generate a 2048-bit RSA key pair
+- Use cryptography to generate a 2048-bit RSA key pair
 - Save the private key to `keys/pem/private-key.pem`
 - Save the public key to `keys/pem/public-key.pem`
 - Display both keys in the console
@@ -99,13 +101,13 @@ These commands will:
 
 ## Configuration
 
-The key generation process uses PyCryptodome with the following specifications:
+The key generation process uses cryptography with the following specifications:
 
 - Standard: PKCS#1
 - Type: RSA
 - Size: 2048 bits
 
-To modify these settings, you'll need to edit the `generate_rsa_key()` function in `encryption_helper/main.py`. Refer to the PyCryptodome documentation for more advanced configurations.
+To modify these settings, you'll need to edit the `generate_rsa_key()` function in `encryption_helper/main.py`. Refer to the cryptography documentation for more advanced configurations.
 
 ## Development
 
@@ -149,3 +151,6 @@ pydoc -w encryption_helper
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+
+[0]: https://github.com/pyca/cryptography

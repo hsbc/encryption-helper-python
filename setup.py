@@ -32,11 +32,14 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "pycryptodome==3.20.0",
+        "cryptography>=43.0.0",
     ],
     extras_require={
         "dev": [
             "pytest>=7.0",
+            "pytest-mock>=3.14.0",
+            "pylint>=3.2.6",
+            "bandit>=1.7.9",
         ],
     },
     keywords="rsa, keys, cryptography, encryption, decryption, python",
