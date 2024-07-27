@@ -2,14 +2,36 @@
 name = "encryption-helper"
 version = "0.0.1"
 description = "A Python CLI application for generating RSA public and private key pairs"
-authors = ["sebastien.rousseau-bedouch <sebastien.rousseau-bedouch@hsbc.com>"]
+authors = ["Sebastien Rousseau <sebastien.rousseau-bedouch@hsbc.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "encryption_helper"}]
+repository = "https://github.com/hsbc/encryption-helper-python"
+keywords = ["rsa", "keys", "cryptography", "encryption", "decryption", "python"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 pycryptodome = "^3.20.0"
 
+[tool.poetry.dev-dependencies]
+pytest = "^8.3.2"
+
+[tool.poetry.scripts]
+encryption-helper = "encryption_helper.__main__:main"
+
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
