@@ -1,6 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
-import sys
+from unittest.mock import patch
 from io import StringIO
 
 # Import the main function from the __main__.py module

@@ -30,6 +30,9 @@ pytest-mock = "^3.14.0"
 [tool.poetry.scripts]
 encryption-helper = "encryption_helper.__main__:main"
 
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.2.6"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
