@@ -15,10 +15,7 @@ setup(
     version="0.0.1",
     author="Sebastien Rousseau",
     author_email="sebastien.rousseau-bedouch@hsbc.com",
-    description="""
-        A Python CLI application for generating RSA public and private
-        key pairs
-    """,
+    description="A Python CLI application for generating RSA public and private key pairs",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hsbc/encryption-helper-python",
@@ -34,13 +31,19 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
     ],
-    install_requires=["pycryptodome==3.20.0"],
+    install_requires=[
+        "pycryptodome==3.20.0",
+    ],
     extras_require={
-        "dev": ["pytest>=7.0"],
+        "dev": [
+            "pytest>=7.0",
+        ],
     },
     keywords="rsa, keys, cryptography, encryption, decryption, python",
     python_requires=">=3.8",
-    setup_requires=["build"],
+    setup_requires=[
+        "build",
+    ],
     entry_points={
         "console_scripts": [
             "encryption-helper=encryption_helper.__main__:main",
