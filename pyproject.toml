@@ -25,7 +25,7 @@ cryptography = "^43.0.0"
 setuptools = "^75.0.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^8.3.2"
+pytest = "^9.0.0"
 pytest-mock = "^3.14.0"
 
 [tool.poetry.scripts]
@@ -34,7 +34,7 @@ encryption-helper = "encryption_helper.__main__:main"
 [tool.poetry.group.dev.dependencies]
 pylint = "^3.2.6"
 bandit = "^1.7.9"
-pytest = "^8.3.2"
+pytest = "^9.0.0"
 pytest-mock = "^3.14.0"
 setuptools = "^75.0.0"
 
