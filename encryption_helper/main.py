@@ -78,15 +78,13 @@ def generate_rsa_key() -> Tuple[bytes, bytes]:
         with open(keys_dir / "public-key.pem", "wb") as file_out:
             file_out.write(public_key)
 
-        # Log the keys
+        # Log only the public key, the private key is never logged
         logger.debug(f"Public key:\n{public_key.decode()}\n")
-        logger.debug(f"Private key:\n{private_key.decode()}\n")
 
-        # Print the keys to console
+        # Print only the public key, the private key is written to file only
         print("Public key:")
         print(public_key.decode())
-        print("\nPrivate key:")
-        print(private_key.decode())
+        print("\nPrivate key written to keys/pem/private-key.pem")
 
         return public_key, private_key
 
