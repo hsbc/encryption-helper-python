@@ -32,7 +32,7 @@ pytest-mock = "^3.14.0"
 encryption-helper = "encryption_helper.__main__:main"
 
 [tool.poetry.group.dev.dependencies]
-pylint = "^3.2.6"
+pylint = "^4.0.0"
 bandit = "^1.7.9"
 pytest = "^8.3.2"
 pytest-mock = "^3.14.0"
