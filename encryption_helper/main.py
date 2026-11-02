@@ -5,6 +5,7 @@ This module contains the primary functionality for generating RSA key pairs.
 It handles the generation process, file I/O operations, and logging.
 """
 
+import os
 from pathlib import Path
 from typing import Tuple
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -64,23 +65,26 @@ def generate_rsa_key() -> Tuple[bytes, bytes]:
         keys_dir = Path("keys/pem")
         keys_dir.mkdir(parents=True, exist_ok=True)
 
-        # Write the private key to a file
-        with open(keys_dir / "private-key.pem", "wb") as file_out:
+        # Write the private key to a file with owner only permissions
+        private_key_path = keys_dir / "private-key.pem"
+        private_key_fd = os.open(
+            private_key_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600
+        )
+        with os.fdopen(private_key_fd, "wb") as file_out:
             file_out.write(private_key)
+        os.chmod(private_key_path, 0o600)
 
         # Write the public key to a file
         with open(keys_dir / "public-key.pem", "wb") as file_out:
             file_out.write(public_key)
 
-        # Log the keys
+        # Log only the public key, the private key is never logged
         logger.debug(f"Public key:\n{public_key.decode()}\n")
-        logger.debug(f"Private key:\n{private_key.decode()}\n")
 
-        # Print the keys to console
+        # Print only the public key, the private key is written to file only
         print("Public key:")
         print(public_key.decode())
-        print("\nPrivate key:")
-        print(private_key.decode())
+        print("\nPrivate key written to keys/pem/private-key.pem")
 
         return public_key, private_key
 
