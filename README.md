@@ -17,6 +17,7 @@
   <a href="#features">Features</a> •
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
+  <a href="#post-quantum-keys">Post quantum keys</a> •
   <a href="#configuration">Configuration</a> •
   <a href="#development">Development</a> •
   <a href="#license">License</a>
@@ -28,6 +29,7 @@
 Encryption Helper is a robust Python package designed to simplify the process of creating RSA key pairs. It leverages the [cryptography][0] library to offer:
 
 - Generation of 2048-bit RSA key pairs
+- Generation of ML-DSA and ML-KEM post quantum key pairs that follow the NIST standards
 - Automatic saving of keys in PEM format
 - Logging of key generation for debugging purposes
 - Simple CLI interface for ease of use
@@ -98,6 +100,29 @@ These commands will:
 - Save the public key to `keys/pem/public-key.pem`
 - Display both keys in the console
 - Log the key generation process
+
+## Post quantum keys
+
+Encryption Helper can also generate post quantum key pairs for teams that are preparing for the quantum migration. The algorithms follow the NIST post quantum standards.
+
+- ML-DSA-65 is the module lattice digital signature scheme from FIPS 204 and it fits settlement signing and document signing
+- ML-KEM-768 is the module lattice key encapsulation mechanism from FIPS 203 and it fits key establishment and data protection
+
+To generate an ML-DSA key pair run the command with the algorithm flag.
+
+```bash
+encryption-helper --algorithm ml-dsa
+```
+
+To generate an ML-KEM key pair use the same flag with the other value.
+
+```bash
+encryption-helper --algorithm ml-kem
+```
+
+The private key is written with owner only permissions and it is never printed to the console or written to the debug log. Only the public key and the private key path are shown. The keys are saved under `keys/pem` with a name that identifies the algorithm.
+
+Post quantum generation needs cryptography 47 or newer built against OpenSSL 3.5 or newer. On an older build the tool reports that the algorithm is not available and the RSA path keeps working as before.
 
 ## Configuration
 
