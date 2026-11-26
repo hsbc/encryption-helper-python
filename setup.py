@@ -15,7 +15,7 @@ setup(
     version="0.0.1",
     author="Sebastien Rousseau",
     author_email="sebastien.rousseau-bedouch@hsbc.com",
-    description="A Python CLI application for generating RSA public and private key pairs",
+    description="A Python CLI application for generating RSA and post quantum key pairs",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hsbc/encryption-helper-python",
@@ -42,7 +42,7 @@ setup(
             "bandit>=1.7.9",
         ],
     },
-    keywords="rsa, keys, cryptography, encryption, decryption, python",
+    keywords="rsa, keys, cryptography, encryption, decryption, python, post-quantum, ml-dsa, ml-kem, fips-204, fips-203",
     python_requires=">=3.8",
     setup_requires=[
         "build",

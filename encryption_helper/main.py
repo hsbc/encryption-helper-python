@@ -1,10 +1,12 @@
 """
 Main module for the encryption_helper package.
 
-This module contains the primary functionality for generating RSA key pairs.
-It handles the generation process, file I/O operations, and logging.
+This module contains the primary functionality for generating RSA key pairs and
+post quantum key pairs. It handles the generation process, file I/O operations,
+and logging.
 """
 
+import os
 from pathlib import Path
 from typing import Tuple
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -90,6 +92,191 @@ def generate_rsa_key() -> Tuple[bytes, bytes]:
     except Exception as e:
         logger.error(f"Unexpected error during key generation: {e}")
         raise
+
+
+def generate_mldsa_key() -> Tuple[bytes, bytes]:
+    """
+    Generate a pair of ML-DSA public and private keys and save them as PEM files.
+
+    ML-DSA is the module lattice digital signature algorithm standardised in FIPS
+    204. This function uses the ML-DSA-65 parameter set which targets NIST
+    security category 3 and fits settlement signing and document signing work.
+
+    The private key is created with owner only file permissions and is never
+    printed to the console or written to the debug log. Only the public key and
+    the private key path are reported.
+
+    Returns:
+        tuple: A tuple containing the generated public and private keys as bytes.
+        The first element is the public key and the second is the private key.
+
+    Raises:
+        RuntimeError: If the installed cryptography backend does not provide ML-DSA.
+        OSError: If there is an error creating the directory or writing the key files.
+        Exception: For any other unexpected error during the key generation process.
+
+    Example:
+        >>> public_key, private_key = generate_mldsa_key()
+        >>> print(public_key[:21])  # Print first 21 bytes of public key
+        b'-----BEGIN PUBLIC KEY'
+    """
+    # Get the logger instance from the Context
+    logger = Context.get_instance().get_logger()
+
+    try:
+        from cryptography.hazmat.primitives.asymmetric import mldsa
+    except ImportError as exc:
+        raise RuntimeError(
+            "ML-DSA requires cryptography 47 or newer built against OpenSSL 3.5 or newer"
+        ) from exc
+
+    try:
+        # Generate the ML-DSA-65 key pair
+        key_pair = mldsa.MLDSA65PrivateKey.generate()
+
+        # Export the private key
+        private_key = key_pair.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+
+        # Export the public key
+        public_key = key_pair.public_key().public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+
+        # Write the keys with the private key protected
+        _, private_key_path = _write_key_pair("mldsa", public_key, private_key)
+
+        # Log and report the public key only
+        logger.debug(f"Public key:\n{public_key.decode()}\n")
+        logger.info(f"Private key written to {private_key_path}")
+
+        print("Public key:")
+        print(public_key.decode())
+        print(f"\nPrivate key written to {private_key_path}")
+
+        return public_key, private_key
+
+    except OSError as e:
+        logger.error(f"Error writing key files: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error during key generation: {e}")
+        raise
+
+
+def generate_mlkem_key() -> Tuple[bytes, bytes]:
+    """
+    Generate a pair of ML-KEM public and private keys and save them as PEM files.
+
+    ML-KEM is the module lattice key encapsulation mechanism standardised in FIPS
+    203. This function uses the ML-KEM-768 parameter set which targets NIST
+    security category 3 and fits key establishment and data protection work.
+
+    The private key is created with owner only file permissions and is never
+    printed to the console or written to the debug log. Only the public key and
+    the private key path are reported.
+
+    Returns:
+        tuple: A tuple containing the generated public and private keys as bytes.
+        The first element is the public key and the second is the private key.
+
+    Raises:
+        RuntimeError: If the installed cryptography backend does not provide ML-KEM.
+        OSError: If there is an error creating the directory or writing the key files.
+        Exception: For any other unexpected error during the key generation process.
+
+    Example:
+        >>> public_key, private_key = generate_mlkem_key()
+        >>> print(public_key[:21])  # Print first 21 bytes of public key
+        b'-----BEGIN PUBLIC KEY'
+    """
+    # Get the logger instance from the Context
+    logger = Context.get_instance().get_logger()
+
+    try:
+        from cryptography.hazmat.primitives.asymmetric import mlkem
+    except ImportError as exc:
+        raise RuntimeError(
+            "ML-KEM requires cryptography 47 or newer built against OpenSSL 3.5 or newer"
+        ) from exc
+
+    try:
+        # Generate the ML-KEM-768 key pair
+        key_pair = mlkem.MLKEM768PrivateKey.generate()
+
+        # Export the private key
+        private_key = key_pair.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+
+        # Export the public key
+        public_key = key_pair.public_key().public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+
+        # Write the keys with the private key protected
+        _, private_key_path = _write_key_pair("mlkem", public_key, private_key)
+
+        # Log and report the public key only
+        logger.debug(f"Public key:\n{public_key.decode()}\n")
+        logger.info(f"Private key written to {private_key_path}")
+
+        print("Public key:")
+        print(public_key.decode())
+        print(f"\nPrivate key written to {private_key_path}")
+
+        return public_key, private_key
+
+    except OSError as e:
+        logger.error(f"Error writing key files: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error during key generation: {e}")
+        raise
+
+
+def _write_key_pair(prefix: str, public_key: bytes, private_key: bytes) -> Tuple[Path, Path]:
+    """
+    Write a public and private key pair to the keys directory.
+
+    The private key file is created with owner only permissions using os.open so
+    there is no window where it is readable by group or other. The permissions
+    are enforced again with os.chmod when the file already exists.
+
+    Args:
+        prefix (str): The file name prefix that identifies the algorithm.
+        public_key (bytes): The public key bytes to write.
+        private_key (bytes): The private key bytes to write.
+
+    Returns:
+        tuple: The public key path and the private key path.
+
+    Raises:
+        OSError: If there is an error creating the directory or writing the files.
+    """
+    keys_dir = Path("keys/pem")
+    keys_dir.mkdir(parents=True, exist_ok=True)
+
+    private_key_path = keys_dir / f"{prefix}-private-key.pem"
+    descriptor = os.open(
+        private_key_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600
+    )
+    with os.fdopen(descriptor, "wb") as file_out:
+        file_out.write(private_key)
+    os.chmod(private_key_path, 0o600)
+
+    public_key_path = keys_dir / f"{prefix}-public-key.pem"
+    with open(public_key_path, "wb") as file_out:
+        file_out.write(public_key)
+
+    return public_key_path, private_key_path
 
 
 if __name__ == "__main__":
